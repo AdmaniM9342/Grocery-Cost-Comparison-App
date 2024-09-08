@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Selector</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="landingstyle.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1 >GrocerySaver</h1>
+        <nav>
+            <a href="index.html" id="clickable-heading" class="nav-link">Home</a>
+            <a href="#" class="nav-link">Contact</a>
+        </nav>
+    </header>
+    <h1 >Select Items</h1>
+    <form id="itemForm">
+        <ul id="itemList">
+            <!-- List of items will be dynamically added here -->
+        </ul>
+        <button type="button" onclick="submitSelection()">Submit</button>
+    </form>
+    <div id="priceListModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="priceList">
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

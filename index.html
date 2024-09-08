@@ -3,19 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Item Selector</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+    <title>GrocerySaver - Compare and Save</title>
+    <link rel="stylesheet" href="landingstyle.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js"></script>
 </head>
 <body>
-    <h1>Select Items</h1>
-    <form id="itemForm">
-        <ul id="itemList">
-            <!-- List of items will be dynamically added here -->
-        </ul>
-        <button type="button" onclick="submitSelection()">Submit</button>
-    </form>
-    <div id="priceList"></div>
+    <div class="container">
+        <header>
+            <h1 >GrocerySaver</h1>
+            <nav>
+                <a href="#" class="nav-link">Contact</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <h2>Compare Groceries, Save Money</h2>
+                <p>Find the best deals across multiple stores</p>
+                <a href="#" class="cta-button" id="startSaving">Start Saving <i data-feather="arrow-right"></i></a>
+            </section>
+
+            <section class="features">
+                <div class="feature">
+                    <i data-feather="bar-chart-2"></i>
+                    <h3>Price Comparison</h3>
+                    <p>Compare prices easily</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 GrocerySaver. All rights reserved.</p>
+        </footer>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

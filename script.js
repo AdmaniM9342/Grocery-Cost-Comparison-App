@@ -58,9 +58,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function submitSelection() {
+    
     const checkboxes = document.querySelectorAll('#itemForm input[type="checkbox"]');
     const priceList = document.getElementById('priceList');
-    priceList.innerHTML = ''; // Clear previous results
+    priceList.innerHTML = ''; 
 
     const storeTotals = {
         HEB: 0,
@@ -106,5 +107,28 @@ function submitSelection() {
 
     if (priceList.innerHTML === '') {
         priceList.innerHTML = '<p>No items selected or prices not available.</p>';
+    }
+    modal.style.display = "flex";  
+    
+
+}
+document.addEventListener('DOMContentLoaded', () => {
+    feather.replace();
+    const startSavingButton = document.getElementById('startSaving');
+    if (startSavingButton) {
+        startSavingButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'list.html';
+        });
+    }
+});
+const modal = document.getElementById("priceListModal");
+const closeModalBtn = document.getElementsByClassName("close")[0];
+closeModalBtn.onclick = function() {
+    modal.style.display = "none";
+}
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
     }
 }
