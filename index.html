@@ -23,11 +23,24 @@
                 <a href="#" class="cta-button" id="startSaving">Start Saving <i data-feather="arrow-right"></i></a>
             </section>
 
-            <section class="features">
-                <div class="feature">
-                    <i data-feather="bar-chart-2"></i>
-                    <h3>Price Comparison</h3>
-                    <p>Compare prices easily</p>
+            <!-- Item Selection Section -->
+            <section class="item-selection">
+                <h2>Select Items</h2>
+                <ul id="itemList">
+                    <!-- Items will be dynamically inserted here by JavaScript -->
+                </ul>
+            </section>
+
+            <!-- Store Totals Section -->
+            <section class="store-totals">
+                <h2>Store Totals</h2>
+                <div id="totals">
+                    <p>HEB: <span id="hebTotal">$0.00</span></p>
+                    <p>Walmart: <span id="walmartTotal">$0.00</span></p>
+                    <p>Target: <span id="targetTotal">$0.00</span></p>
+                    <p>Randalls: <span id="randallsTotal">$0.00</span></p>
+                    <p>Kroger: <span id="krogerTotal">$0.00</span></p>
+                    <p>Fiesta: <span id="fiestaTotal">$0.00</span></p>
                 </div>
             </section>
         </main>
