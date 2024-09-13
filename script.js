@@ -1,5 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
     const itemList = document.getElementById('itemList');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    
+    if (!itemList) {
+        console.error('Item list not found');
+        return;
+    }
+
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', function() {
+            document.getElementById('priceListModal').style.display = 'none';
+        });
+    } else {
+        console.error('Close button not found');
+    }
 
     // Load and process the Excel data
     fetch('Data.xlsx')
@@ -9,18 +23,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const sheetName = workbook.SheetNames[0];
             const sheet = workbook.Sheets[sheetName];
             const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-            console.log('Excel Data:', data); // Log data for debugging
-
+            
             const headers = data[0];
             const itemData = data.slice(1);
             const stores = headers.slice(1); // Store names
 
             itemData.forEach((row, index) => {
                 const itemName = row[0];
-                const prices = row.slice(1).map(price => parseFloat(price.replace('$', ''))); // Remove '$' and convert to number
-                console.log(`Item ${itemName} Prices:`, prices); // Log prices for debugging
-
+                const prices = row.slice(1);
                 const li = document.createElement('li');
                 li.innerHTML = `
                     <label>
@@ -52,7 +62,7 @@ function updateTotal() {
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     const stores = ['HEB', 'Walmart', 'Target', 'Randalls', 'Kroger', 'Fiesta'];
     let total = {};
-
+    
     // Initialize totals for each store
     stores.forEach(store => total[store] = 0);
 
@@ -61,23 +71,14 @@ function updateTotal() {
             const quantity = parseInt(document.getElementById(`quantity-${index}`).textContent);
             const prices = JSON.parse(document.getElementById(`prices-${index}`).value);
 
-            console.log(`Index ${index} Quantity:`, quantity); // Log quantity for debugging
-            console.log(`Index ${index} Prices:`, prices); // Log prices for debugging
-
-            if (!isNaN(quantity) && prices.every(price => !isNaN(price))) {
-                // Update totals for each store
-                prices.forEach((price, storeIndex) => {
-                    if (!isNaN(price)) {
-                        total[stores[storeIndex]] += price * quantity;
-                    }
-                });
-            }
+            // Update totals for each store
+            prices.forEach((price, storeIndex) => {
+                total[stores[storeIndex]] += price * quantity;
+            });
         }
     });
 
     const cheapestStore = Object.keys(total).reduce((a, b) => total[a] < total[b] ? a : b);
-
-    console.log('Total:', total); // Log total for debugging
 
     alert(`Total for HEB: $${total.HEB.toFixed(2)}
 Total for Walmart: $${total.Walmart.toFixed(2)}
