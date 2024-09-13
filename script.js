@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             itemData.forEach((row, index) => {
                 const itemName = row[0];
-                const prices = row.slice(1);
+                const prices = row.slice(1).map(price => parseFloat(price) || 0); // Ensure prices are numbers
                 const li = document.createElement('li');
                 li.innerHTML = `
                     <span>${itemName}</span>
@@ -41,7 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 itemList.appendChild(li);
             });
-        });
+        })
+        .catch(error => console.error('Error loading Excel data:', error));
 });
 
 function changeQuantity(index, delta) {
@@ -52,7 +53,6 @@ function changeQuantity(index, delta) {
     }
     quantity = Math.max(0, quantity + delta); // Prevent negative quantity
     quantityElem.textContent = quantity;
-    updateTotal();
 }
 
 function updateTotal() {
@@ -68,9 +68,18 @@ function updateTotal() {
         const quantity = parseInt(quantityElem.textContent);
         const prices = JSON.parse(document.getElementById(`prices-${index}`).value);
 
+        console.log(`Item ${index} - Quantity: ${quantity}, Prices: ${prices}`); // Debugging line
+
+        if (isNaN(quantity) || !Array.isArray(prices) || prices.some(isNaN)) {
+            console.error(`Invalid data for item ${index}: Quantity=${quantity}, Prices=${prices}`);
+            return;
+        }
+
         // Update totals for each store
         prices.forEach((price, storeIndex) => {
-            total[stores[storeIndex]] += price * quantity;
+            if (typeof price === 'number') {
+                total[stores[storeIndex]] += price * quantity;
+            }
         });
     });
 
