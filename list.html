@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="landingstyle.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
     <header>
@@ -17,7 +18,7 @@
         </nav>
     </header>
     <h1>Select Items</h1>
-    <form id="itemForm">
+    <form id="itemForm" onsubmit="return false;"> <!-- Prevent form submission -->
         <ul id="itemList">
             <!-- List of items will be dynamically added here -->
         </ul>

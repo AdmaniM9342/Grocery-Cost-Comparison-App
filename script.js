@@ -17,7 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load and process the Excel data
     fetch('Data.xlsx')
-        .then(response => response.arrayBuffer())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.arrayBuffer();
+        })
         .then(arrayBuffer => {
             const workbook = XLSX.read(arrayBuffer, { type: 'array' });
             const sheetName = workbook.SheetNames[0];
@@ -44,12 +49,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 itemList.appendChild(li);
             });
-        });
+        })
+        .catch(error => console.error('Error loading or processing data:', error));
 });
 
 function changeQuantity(index, delta) {
     const quantityElem = document.getElementById(`quantity-${index}`);
-    let quantity = parseInt(quantityElem.textContent);
+    let quantity = parseInt(quantityElem.textContent, 10); // specify radix
     if (isNaN(quantity)) {
         quantity = 0;
     }
@@ -68,7 +74,7 @@ function updateTotal() {
 
     checkboxes.forEach((checkbox, index) => {
         if (checkbox.checked) {
-            const quantity = parseInt(document.getElementById(`quantity-${index}`).textContent);
+            const quantity = parseInt(document.getElementById(`quantity-${index}`).textContent, 10);
             const prices = JSON.parse(document.getElementById(`prices-${index}`).value);
 
             // Update totals for each store
