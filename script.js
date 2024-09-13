@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const sheet = workbook.Sheets[sheetName];
             const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
+            console.log('Excel Data:', data); // Log data for debugging
+
             const headers = data[0];
             const itemData = data.slice(1);
             const stores = headers.slice(1); // Store names
@@ -17,6 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
             itemData.forEach((row, index) => {
                 const itemName = row[0];
                 const prices = row.slice(1).map(price => parseFloat(price.replace('$', ''))); // Remove '$' and convert to number
+                console.log(`Item ${itemName} Prices:`, prices); // Log prices for debugging
+
                 const li = document.createElement('li');
                 li.innerHTML = `
                     <label>
@@ -57,7 +61,10 @@ function updateTotal() {
             const quantity = parseInt(document.getElementById(`quantity-${index}`).textContent);
             const prices = JSON.parse(document.getElementById(`prices-${index}`).value);
 
-            if (!isNaN(quantity)) {
+            console.log(`Index ${index} Quantity:`, quantity); // Log quantity for debugging
+            console.log(`Index ${index} Prices:`, prices); // Log prices for debugging
+
+            if (!isNaN(quantity) && prices.every(price => !isNaN(price))) {
                 // Update totals for each store
                 prices.forEach((price, storeIndex) => {
                     if (!isNaN(price)) {
@@ -69,6 +76,8 @@ function updateTotal() {
     });
 
     const cheapestStore = Object.keys(total).reduce((a, b) => total[a] < total[b] ? a : b);
+
+    console.log('Total:', total); // Log total for debugging
 
     alert(`Total for HEB: $${total.HEB.toFixed(2)}
 Total for Walmart: $${total.Walmart.toFixed(2)}
