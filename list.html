@@ -10,13 +10,13 @@
 </head>
 <body>
     <header>
-        <h1 >GrocerySaver</h1>
+        <h1>GrocerySaver</h1>
         <nav>
             <a href="index.html" id="clickable-heading" class="nav-link">Home</a>
             <a href="#" class="nav-link">Contact</a>
         </nav>
     </header>
-    <h1 >Select Items</h1>
+    <h1>Select Items</h1>
     <form id="itemForm">
         <ul id="itemList">
             <!-- List of items will be dynamically added here -->
@@ -32,7 +32,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const itemList = document.getElementById('itemList');
-            
+
             // Load and process the Excel data
             fetch('Data.xlsx')
                 .then(response => response.arrayBuffer())
@@ -41,7 +41,7 @@
                     const sheetName = workbook.SheetNames[0];
                     const sheet = workbook.Sheets[sheetName];
                     const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-                    
+
                     const headers = data[0];
                     const itemData = data.slice(1);
                     const stores = headers.slice(1); // Store names
@@ -52,7 +52,6 @@
                         const li = document.createElement('li');
                         li.innerHTML = `
                             <label>
-                                <input type="checkbox" data-index="${index}" onchange="updateTotal()">
                                 ${itemName}
                             </label>
                             <button type="button" onclick="changeQuantity(${index}, -1)">-</button>
@@ -77,38 +76,49 @@
         }
 
         function updateTotal() {
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checkboxes = document.querySelectorAll('input[type="hidden"]');
             const stores = ['HEB', 'Walmart', 'Target', 'Randalls', 'Kroger', 'Fiesta'];
             let total = {};
-            
+
             // Initialize totals for each store
             stores.forEach(store => total[store] = 0);
 
-            checkboxes.forEach((checkbox, index) => {
-                if (checkbox.checked) {
-                    const quantity = parseInt(document.getElementById(`quantity-${index}`).textContent);
-                    const prices = JSON.parse(document.getElementById(`prices-${index}`).value);
+            checkboxes.forEach((hiddenInput, index) => {
+                const quantity = parseInt(document.getElementById(`quantity-${index}`).textContent);
+                const prices = JSON.parse(hiddenInput.value);
 
-                    // Update totals for each store
-                    prices.forEach((price, storeIndex) => {
-                        total[stores[storeIndex]] += price * quantity;
-                    });
-                }
+                // Update totals for each store
+                prices.forEach((price, storeIndex) => {
+                    total[stores[storeIndex]] += price * quantity;
+                });
             });
 
             const cheapestStore = Object.keys(total).reduce((a, b) => total[a] < total[b] ? a : b);
 
-            alert(`Total for HEB: $${total.HEB.toFixed(2)}
-Total for Walmart: $${total.Walmart.toFixed(2)}
-Total for Target: $${total.Target.toFixed(2)}
-Total for Randalls: $${total.Randalls.toFixed(2)}
-Total for Kroger: $${total.Kroger.toFixed(2)}
-Total for Fiesta: $${total.Fiesta.toFixed(2)}
-Cheapest store: ${cheapestStore}`);
+            const priceList = document.getElementById('priceList');
+            priceList.innerHTML = '<h3>Totals:</h3>';
+            stores.forEach(store => {
+                priceList.innerHTML += `<p>Total at ${store}: $${total[store].toFixed(2)}</p>`;
+            });
+            priceList.innerHTML += `<h3>Cheapest Store:</h3>`;
+            priceList.innerHTML += `<p>The cheapest store is ${cheapestStore} with a total of $${total[cheapestStore].toFixed(2)}</p>`;
         }
 
         function submitSelection() {
             updateTotal();
+            const modal = document.getElementById("priceListModal");
+            modal.style.display = "flex";
+        }
+
+        const modal = document.getElementById("priceListModal");
+        const closeModalBtn = document.getElementsByClassName("close")[0];
+        closeModalBtn.onclick = function() {
+            modal.style.display = "none";
+        }
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
         }
     </script>
 </body>
