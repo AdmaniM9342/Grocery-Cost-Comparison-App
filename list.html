@@ -31,33 +31,46 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const items = [
-                { name: 'Soda', price: 1.5 },
-                { name: 'Milk', price: 2 },
-                { name: 'Chips', price: 1.2 },
-                // Add more items here with prices
-            ];
-
             const itemList = document.getElementById('itemList');
+            
+            // Load and process the Excel data
+            fetch('Data.xlsx')
+                .then(response => response.arrayBuffer())
+                .then(arrayBuffer => {
+                    const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const sheet = workbook.Sheets[sheetName];
+                    const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                    
+                    const headers = data[0];
+                    const itemData = data.slice(1);
+                    const stores = headers.slice(1); // Store names
 
-            items.forEach((item, index) => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <label>
-                        <input type="checkbox" data-index="${index}" onchange="updateTotal()">
-                        ${item.name} - $${item.price.toFixed(2)}
-                    </label>
-                    <button type="button" onclick="changeQuantity(${index}, -1)">-</button>
-                    <span id="quantity-${index}">0</span>
-                    <button type="button" onclick="changeQuantity(${index}, 1)">+</button>
-                `;
-                itemList.appendChild(li);
-            });
+                    itemData.forEach((row, index) => {
+                        const itemName = row[0];
+                        const prices = row.slice(1);
+                        const li = document.createElement('li');
+                        li.innerHTML = `
+                            <label>
+                                <input type="checkbox" data-index="${index}" onchange="updateTotal()">
+                                ${itemName}
+                            </label>
+                            <button type="button" onclick="changeQuantity(${index}, -1)">-</button>
+                            <span id="quantity-${index}">0</span>
+                            <button type="button" onclick="changeQuantity(${index}, 1)">+</button>
+                            <input type="hidden" id="prices-${index}" value='${JSON.stringify(prices)}'>
+                        `;
+                        itemList.appendChild(li);
+                    });
+                });
         });
 
         function changeQuantity(index, delta) {
             const quantityElem = document.getElementById(`quantity-${index}`);
             let quantity = parseInt(quantityElem.textContent);
+            if (isNaN(quantity)) {
+                quantity = 0;
+            }
             quantity = Math.max(0, quantity + delta); // Prevent negative quantity
             quantityElem.textContent = quantity;
             updateTotal();
@@ -65,34 +78,21 @@
 
         function updateTotal() {
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            const items = [
-                { name: 'Soda', price: 1.5 },
-                { name: 'Milk', price: 2 },
-                { name: 'Chips', price: 1.2 },
-                // Add more items here with prices
-            ];
+            const stores = ['HEB', 'Walmart', 'Target', 'Randalls', 'Kroger', 'Fiesta'];
+            let total = {};
             
-            let total = {
-                HEB: 0,
-                Walmart: 0,
-                Target: 0,
-                Randalls: 0,
-                Kroger: 0,
-                Fiesta: 0
-            };
+            // Initialize totals for each store
+            stores.forEach(store => total[store] = 0);
 
             checkboxes.forEach((checkbox, index) => {
                 if (checkbox.checked) {
                     const quantity = parseInt(document.getElementById(`quantity-${index}`).textContent);
-                    const item = items[index];
-                    
+                    const prices = JSON.parse(document.getElementById(`prices-${index}`).value);
+
                     // Update totals for each store
-                    total.HEB += item.price * quantity;
-                    total.Walmart += item.price * quantity * 0.95; // Assume Walmart is 5% cheaper
-                    total.Target += item.price * quantity * 1.02; // Assume Target is 2% more expensive
-                    total.Randalls += item.price * quantity * 1.05; // Assume Randalls is 5% more expensive
-                    total.Kroger += item.price * quantity * 1.03; // Assume Kroger is 3% more expensive
-                    total.Fiesta += item.price * quantity * 0.98; // Assume Fiesta is 2% cheaper
+                    prices.forEach((price, storeIndex) => {
+                        total[stores[storeIndex]] += price * quantity;
+                    });
                 }
             });
 
