@@ -17,12 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load and process the Excel data
     fetch('Data.xlsx')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.arrayBuffer();
-        })
+        .then(response => response.arrayBuffer())
         .then(arrayBuffer => {
             const workbook = XLSX.read(arrayBuffer, { type: 'array' });
             const sheetName = workbook.SheetNames[0];
@@ -38,10 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const prices = row.slice(1);
                 const li = document.createElement('li');
                 li.innerHTML = `
-                    <label>
-                        <input type="checkbox" data-index="${index}" onchange="updateTotal()">
-                        ${itemName}
-                    </label>
+                    <span>${itemName}</span>
                     <button type="button" onclick="changeQuantity(${index}, -1)">-</button>
                     <span id="quantity-${index}">0</span>
                     <button type="button" onclick="changeQuantity(${index}, 1)">+</button>
@@ -49,13 +41,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 itemList.appendChild(li);
             });
-        })
-        .catch(error => console.error('Error loading or processing data:', error));
+        });
 });
 
 function changeQuantity(index, delta) {
     const quantityElem = document.getElementById(`quantity-${index}`);
-    let quantity = parseInt(quantityElem.textContent, 10); // specify radix
+    let quantity = parseInt(quantityElem.textContent);
     if (isNaN(quantity)) {
         quantity = 0;
     }
@@ -65,23 +56,22 @@ function changeQuantity(index, delta) {
 }
 
 function updateTotal() {
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const quantities = document.querySelectorAll('[id^="quantity-"]');
     const stores = ['HEB', 'Walmart', 'Target', 'Randalls', 'Kroger', 'Fiesta'];
     let total = {};
     
     // Initialize totals for each store
     stores.forEach(store => total[store] = 0);
 
-    checkboxes.forEach((checkbox, index) => {
-        if (checkbox.checked) {
-            const quantity = parseInt(document.getElementById(`quantity-${index}`).textContent, 10);
-            const prices = JSON.parse(document.getElementById(`prices-${index}`).value);
+    quantities.forEach((quantityElem) => {
+        const index = quantityElem.id.split('-')[1];
+        const quantity = parseInt(quantityElem.textContent);
+        const prices = JSON.parse(document.getElementById(`prices-${index}`).value);
 
-            // Update totals for each store
-            prices.forEach((price, storeIndex) => {
-                total[stores[storeIndex]] += price * quantity;
-            });
-        }
+        // Update totals for each store
+        prices.forEach((price, storeIndex) => {
+            total[stores[storeIndex]] += price * quantity;
+        });
     });
 
     const cheapestStore = Object.keys(total).reduce((a, b) => total[a] < total[b] ? a : b);
@@ -93,4 +83,8 @@ Total for Randalls: $${total.Randalls.toFixed(2)}
 Total for Kroger: $${total.Kroger.toFixed(2)}
 Total for Fiesta: $${total.Fiesta.toFixed(2)}
 Cheapest store: ${cheapestStore}`);
+}
+
+function submitSelection() {
+    updateTotal();
 }
