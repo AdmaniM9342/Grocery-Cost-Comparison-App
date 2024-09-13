@@ -21,11 +21,11 @@
         <ul id="itemList">
             <!-- List of items will be dynamically added here -->
         </ul>
-        <button type="button" onclick="submitSelection()">Submit</button>
+        <button type="button" onclick="showTotal()">Show Total</button>
     </form>
     <div id="priceListModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <span class="close" onclick="closeModal()">&times;</span>
             <div id="priceList"></div>
         </div>
     </div>
@@ -51,9 +51,7 @@
                         const prices = row.slice(1);
                         const li = document.createElement('li');
                         li.innerHTML = `
-                            <label>
-                                ${itemName}
-                            </label>
+                            <span>${itemName}</span>
                             <button type="button" onclick="changeQuantity(${index}, -1)">-</button>
                             <span id="quantity-${index}">0</span>
                             <button type="button" onclick="changeQuantity(${index}, 1)">+</button>
@@ -72,53 +70,41 @@
             }
             quantity = Math.max(0, quantity + delta); // Prevent negative quantity
             quantityElem.textContent = quantity;
-            updateTotal();
         }
 
-        function updateTotal() {
-            const checkboxes = document.querySelectorAll('input[type="hidden"]');
+        function showTotal() {
             const stores = ['HEB', 'Walmart', 'Target', 'Randalls', 'Kroger', 'Fiesta'];
             let total = {};
-
+            
             // Initialize totals for each store
             stores.forEach(store => total[store] = 0);
 
-            checkboxes.forEach((hiddenInput, index) => {
-                const quantity = parseInt(document.getElementById(`quantity-${index}`).textContent);
-                const prices = JSON.parse(hiddenInput.value);
+            stores.forEach((store, storeIndex) => {
+                document.querySelectorAll('li').forEach((li, index) => {
+                    const quantity = parseInt(document.getElementById(`quantity-${index}`).textContent);
+                    const prices = JSON.parse(document.getElementById(`prices-${index}`).value);
 
-                // Update totals for each store
-                prices.forEach((price, storeIndex) => {
-                    total[stores[storeIndex]] += price * quantity;
+                    total[store] += prices[storeIndex] * quantity;
                 });
             });
 
             const cheapestStore = Object.keys(total).reduce((a, b) => total[a] < total[b] ? a : b);
 
-            const priceList = document.getElementById('priceList');
-            priceList.innerHTML = '<h3>Totals:</h3>';
-            stores.forEach(store => {
-                priceList.innerHTML += `<p>Total at ${store}: $${total[store].toFixed(2)}</p>`;
-            });
-            priceList.innerHTML += `<h3>Cheapest Store:</h3>`;
-            priceList.innerHTML += `<p>The cheapest store is ${cheapestStore} with a total of $${total[cheapestStore].toFixed(2)}</p>`;
+            document.getElementById('priceList').innerHTML = `
+                Total for HEB: $${total.HEB.toFixed(2)}<br>
+                Total for Walmart: $${total.Walmart.toFixed(2)}<br>
+                Total for Target: $${total.Target.toFixed(2)}<br>
+                Total for Randalls: $${total.Randalls.toFixed(2)}<br>
+                Total for Kroger: $${total.Kroger.toFixed(2)}<br>
+                Total for Fiesta: $${total.Fiesta.toFixed(2)}<br>
+                Cheapest store: ${cheapestStore}
+            `;
+
+            document.getElementById('priceListModal').style.display = 'block';
         }
 
-        function submitSelection() {
-            updateTotal();
-            const modal = document.getElementById("priceListModal");
-            modal.style.display = "flex";
-        }
-
-        const modal = document.getElementById("priceListModal");
-        const closeModalBtn = document.getElementsByClassName("close")[0];
-        closeModalBtn.onclick = function() {
-            modal.style.display = "none";
-        }
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
+        function closeModal() {
+            document.getElementById('priceListModal').style.display = 'none';
         }
     </script>
 </body>
