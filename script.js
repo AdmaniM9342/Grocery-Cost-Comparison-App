@@ -105,8 +105,10 @@ function updateTotal() {
     totalsList.appendChild(cheapestOption);
 }
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('locationForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the default form submission
+    const calculateButton = document.getElementById('calculateButton');
+
+    // Attach click event to the button
+    calculateButton.addEventListener('click', function() {
         updateTravelCosts();
     });
 
@@ -116,11 +118,9 @@ document.addEventListener('DOMContentLoaded', function() {
             position => {
                 document.getElementById('userLat').value = position.coords.latitude;
                 document.getElementById('userLon').value = position.coords.longitude;
-                updateTravelCosts(); // Calculate travel costs with user's live location
             },
             error => {
                 console.error('Error getting location from browser:', error);
-                // Handle error or provide fallback
             }
         );
     }
@@ -131,6 +131,11 @@ function updateTravelCosts() {
     const userLon = parseFloat(document.getElementById('userLon').value);
     const fuelCostPerMile = 12; // Adjust as needed
     const mileagePerGallon = 40;  // Adjust as needed
+
+    if (isNaN(userLat) || isNaN(userLon)) {
+        alert('Please enter valid latitude and longitude values.');
+        return;
+    }
 
     // Store location data (Replace with actual store coordinates)
     const storeData = {
@@ -143,7 +148,7 @@ function updateTravelCosts() {
     };
 
     const travelCostsDiv = document.getElementById('travelCosts');
-    travelCostsDiv.innerHTML = '';
+    travelCostsDiv.innerHTML = ''; // Clear previous travel cost calculations
 
     Object.keys(storeData).forEach(store => {
         const storeLat = storeData[store].lat;
@@ -171,3 +176,4 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
 }
+

@@ -39,13 +39,11 @@
                 </form>
                 <div class="manual-location">
                     <h2>Enter Your Location</h2>
-                    <form id="locationForm">
-                        <label for="userLat">Latitude:</label>
-                        <input type="number" id="userLat" step="any" required>
-                        <label for="userLon">Longitude:</label>
-                        <input type="number" id="userLon" step="any" required>
-                        <button type="button" onclick="updateTotalAndTravelCost()">Calculate Costs</button>
-                    </form>
+                    <label for="userLat">Latitude:</label>
+                    <input type="number" id="userLat" step="any" required>
+                    <label for="userLon">Longitude:</label>
+                    <input type="number" id="userLon" step="any" required>
+                    <button id="calculateButton">Calculate Travel Costs</button>
                 </div>
                 
                 <h2>Travel Costs</h2>
