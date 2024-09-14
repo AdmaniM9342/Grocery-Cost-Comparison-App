@@ -32,6 +32,7 @@ h1 {
     font-size: 24px;
     color: #22c55e;
     text-align: center;
+    margin: 0 20px ;
 }
 
 nav {
@@ -57,7 +58,7 @@ nav {
     max-width: 1000px; 
     width: 100%;
 }
-#itemList {
+#itemList{
     list-style-type: none;
     padding: 0;
     margin: 0 0 20px 0;
@@ -216,6 +217,187 @@ button:hover {
     #itemList li {
         flex: 1 1 100%; /* Stack items in one column on small screens */
     }
+}
+/* Totals list styling to display items side by side */
+#totalsList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex; /* Use flexbox to display items in a row */
+    flex-wrap: wrap; /* Allow items to wrap onto the next row if needed */
+    gap: 20px; /* Add space between the list items */
+}
+
+#totalsList li {
+    flex: 1 1 45%; /* Each list item takes up 45% of the available width */
+    padding: 12px 15px;
+    background-color: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#totalsList li:hover {
+    background-color: #f1f5f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#totalsList .store-name {
+    font-weight: bold;
+    color: #374151;
+}
+
+#totalsList .price {
+    font-weight: bold;
+    color: #10b981;
+    font-size: 20px;
+}
+
+/* Container for both forms */
+.form-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+    align-items: flex-start;
+    height: 80vh;
+}
+
+/* Individual form styles */
+#itemForm, .totals-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    width: 48%;
+    height: 100%;
+    overflow-y: auto; /* Enable scrolling within the form */
+}
+
+.total-header {
+    margin-bottom: 15px;
+    font-size: 24px;
+    color: #22c55e;
+    text-align: center;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    color: #2c3e50;
+}
+
+/* Manual Location Section */
+.manual-location {
+    max-width: 600px;
+    margin: 10px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #f9f9f9;
+}
+
+.manual-location h2 {
+    margin-top: 0;
+    color: #2c3e50;
+    text-align: center;
+}
+
+#locationForm {
+    display: flex;
+    flex-direction: column;
+}
+
+#locationForm label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#locationForm input[type="number"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+#locationForm button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#locationForm button:hover {
+    background-color: #2980b9;
+}
+
+/* Container to hold the forms and travel costs side by side */
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    gap: 20px; /* Space between the forms */
+}
+
+/* Style for the manual location form */
+.manual-location {
+    flex: 1;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.manual-location h2 {
+    margin-top: 0;
+}
+
+.manual-location form {
+    display: flex;
+    flex-direction: column;
+}
+
+.manual-location label {
+    margin-top: 10px;
+}
+
+.manual-location input {
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.manual-location button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.manual-location button:hover {
+    background-color: #0056b3;
 }
 
 
