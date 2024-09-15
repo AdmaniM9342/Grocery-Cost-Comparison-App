@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Item Selector</title>
+    <title>GrocerySaver</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="landingstyle.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
@@ -17,18 +17,46 @@
             <a href="#" class="nav-link">Contact</a>
         </nav>
     </header>
-    <h1>Select Items</h1>
-    <form id="itemForm">
-        <ul id="itemList">
-            <!-- List of items will be dynamically added here -->
-        </ul>
-        <button type="button" onclick="submitSelection()">Submit</button>
-    </form>
-    <div id="priceListModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span id="closeModalBtn" class="close">&times;</span>
-            <div id="priceList"></div>
-        </div>
-    </div>
+
+    <main>
+
+        <h1 class="Select">Select Items</h1>
+        
+        <div class="form-container">
+            <form id="itemForm">
+                <ul id="itemList">
+                </ul>
+                <button type="button" onclick="submitSelection()">Submit</button>
+            </form>
+            
+            <div class="totals-container">
+                <h2 class="total-header">Total Prices</h2>
+                
+                <form id="totalsForm">
+                    <ul id="totalsList">
+                        <!-- Total prices for stores will appear here -->
+                    </ul>
+                </form>
+                <div class="manual-location">
+                    <h2>Enter Your Location</h2>
+                    <label for="userLat">Latitude:</label>
+                    <input type="number" id="userLat" step="any" required>
+                    <label for="userLon">Longitude:</label>
+                    <input type="number" id="userLon" step="any" required>
+                    <button id="calculateButton">Calculate Travel Costs</button>
+                </div>
+                
+                <h2>Travel Costs</h2>
+                <form id="totalcost"></form>
+                    <ul id="costList">
+                        <!-- Total prices for stores will appear here -->
+                    </ul>
+                </form>
+                
+    <div id="travelCosts"></div>
+                
+    
+    </main>
 </body>
 </html>
+
