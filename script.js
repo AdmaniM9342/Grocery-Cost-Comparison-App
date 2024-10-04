@@ -2,9 +2,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const itemList = document.getElementById('itemList');
     const totalsList = document.getElementById('totalsList');
     const travelCostsElem = document.getElementById('travelCosts');
+    const calculateButton = document.getElementById('calculateButton');
+    
 
-    if (!itemList || !totalsList || !travelCostsElem) {
-        console.error('Item list, totals list, or travel cost info not found');
+
+    if (!itemList || !totalsList || !travelCostsElem || !calculateButton) {
+        console.error('Required elements not found');
         return;
     }
 
@@ -36,10 +39,93 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             updateTotal(); // Initialize totals on load
-            getUserLocation(); // Get user's location and update travel costs
         })
         .catch(error => console.error('Error loading Excel data:', error));
+
+    // Attach click event to the button
+    calculateButton.addEventListener('click', async function() {
+        await getCoordinates(); // Fetch coordinates based on pin code
+    });
 });
+
+async function getCoordinates() {
+    const pinCode = document.getElementById("pinCode").value;
+    const apiKey = '8be4aec47c7748daac4105af3f2180c6'; // Replace with your OpenCage API key
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${pinCode}&key=${apiKey}`;
+
+    if (!pinCode) {
+        alert("Please enter a pin code.");
+        return;
+    }
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.results.length > 0) {
+            const userLat = data.results[0].geometry.lat;
+            const userLon = data.results[0].geometry.lng;
+
+            // Call updateTravelCosts with fetched coordinates
+            updateTravelCosts(userLat, userLon);
+        } else {
+            alert("Coordinates not found for the given pin code.");
+        }
+    } catch (error) {
+        alert("Error fetching data.");
+        console.error('Error:', error);
+    }
+}
+
+function updateTravelCosts(userLat, userLon) {
+    const fuelCostPerMile = parseFloat(document.getElementById('fuelCostPerMile').value); // Get from input
+    const mileagePerGallon = parseFloat(document.getElementById('mileagePerGallon').value); // Get from input
+    const deliveryCostPerMile = 0.5;
+    if (isNaN(userLat) || isNaN(userLon) || isNaN(fuelCostPerMile) || isNaN(mileagePerGallon)) {
+        alert('Please enter valid values for latitude, longitude, fuel cost, and mileage.');
+        return;
+    }
+
+    // Store location data (Replace with actual store coordinates)
+    const storeData = {
+        'HEB': { lat: 30.7604, lon: -95.3698 },
+        'Walmart': { lat: 29.8604, lon: -93.3698 },
+        'Target': { lat: 29.7604, lon: -94.3698 },
+        'Randalls': { lat: 28.7604, lon: -95.3698 },
+        'Kroger': { lat: 29.7604, lon: -97.3698 },
+        'Fiesta': { lat: 30.7604, lon: -95.3698 }
+    };
+
+    const travelCostsDiv = document.getElementById('travelCosts');
+    travelCostsDiv.innerHTML = ''; // Clear previous travel cost calculations
+
+    Object.keys(storeData).forEach(store => {
+        const storeLat = storeData[store].lat;
+        const storeLon = storeData[store].lon;
+        const distance = calculateDistance(userLat, userLon, storeLat, storeLon);
+        const cost = (distance / mileagePerGallon) * fuelCostPerMile;
+        const deliveryCost = distance * deliveryCostPerMile;
+
+        const costElem = document.createElement('div');
+        costElem.innerHTML = `
+            <h3>${store}</h3>
+            <p>Distance: ${distance.toFixed(2)} miles</p>
+            <p>Travel Cost: $${cost.toFixed(2)}</p>
+        `;
+        travelCostsDiv.appendChild(costElem);
+    });
+}
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 3958.8; // Radius of Earth in miles
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
 
 function changeQuantity(index, delta) {
     const quantityElem = document.getElementById(`quantity-${index}`);
@@ -104,76 +190,9 @@ function updateTotal() {
     cheapestOption.innerHTML = `Cheapest Option: ${cheapestStore} at $${cheapestPrice.toFixed(2)}`;
     totalsList.appendChild(cheapestOption);
 }
-document.addEventListener('DOMContentLoaded', function() {
-    const calculateButton = document.getElementById('calculateButton');
+// Add this code to your existing JavaScript file
 
-    // Attach click event to the button
-    calculateButton.addEventListener('click', function() {
-        updateTravelCosts();
-    });
-
-    // Optional: Get user location from browser if permission is granted
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            position => {
-                document.getElementById('userLat').value = position.coords.latitude;
-                document.getElementById('userLon').value = position.coords.longitude;
-            },
-            error => {
-                console.error('Error getting location from browser:', error);
-            }
-        );
-    }
+document.getElementById('downloadButton').addEventListener('click', function() {
+    downloadShoppingList();
 });
-
-function updateTravelCosts() {
-    const userLat = parseFloat(document.getElementById('userLat').value);
-    const userLon = parseFloat(document.getElementById('userLon').value);
-    const fuelCostPerMile = 12; // Adjust as needed
-    const mileagePerGallon = 40;  // Adjust as needed
-
-    if (isNaN(userLat) || isNaN(userLon)) {
-        alert('Please enter valid latitude and longitude values.');
-        return;
-    }
-
-    // Store location data (Replace with actual store coordinates)
-    const storeData = {
-        'HEB': { lat: 30.7604, lon: -95.3698 },
-        'Walmart': { lat: 29.8604, lon: -93.3698 },
-        'Target': { lat: 29.7604, lon: -94.3698 },
-        'Randalls': { lat: 28.7604, lon: -95.3698 },
-        'Kroger': { lat: 29.7604, lon: -97.3698 },
-        'Fiesta': { lat: 30.7604, lon: -95.3698 }
-    };
-
-    const travelCostsDiv = document.getElementById('travelCosts');
-    travelCostsDiv.innerHTML = ''; // Clear previous travel cost calculations
-
-    Object.keys(storeData).forEach(store => {
-        const storeLat = storeData[store].lat;
-        const storeLon = storeData[store].lon;
-        const distance = calculateDistance(userLat, userLon, storeLat, storeLon);
-        const cost = (distance / mileagePerGallon) * fuelCostPerMile;
-
-        const costElem = document.createElement('div');
-        costElem.innerHTML = `
-            <h3>${store}</h3>
-            <p>Distance: ${distance.toFixed(2)} miles</p>
-            <p>Travel Cost: $${cost.toFixed(2)}</p>
-        `;
-        travelCostsDiv.appendChild(costElem);
-    });
-}
-
-function calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 3958.8; // Radius of Earth in miles
-    const dLat = (lat2 - lat1) * (Math.PI / 180);
-    const dLon = (lon2 - lon1) * (Math.PI / 180);
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-              Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-}
 

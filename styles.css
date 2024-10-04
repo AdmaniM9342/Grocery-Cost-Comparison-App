@@ -1,12 +1,15 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
     background-color: #eafef2;
-    margin: 0 40px;
+    margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    line-height: 1.6;
+    color: #333;
 }
 
 .container {
@@ -14,12 +17,12 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
-    flex-grow: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+/* Header Styles */
 header {
     display: flex;
     justify-content: space-between;
@@ -32,7 +35,7 @@ h1 {
     font-size: 24px;
     color: #22c55e;
     text-align: center;
-    margin: 0 20px ;
+    margin: 0 20px;
 }
 
 nav {
@@ -50,15 +53,36 @@ nav {
     color: #22c55e;
 }
 
+/* Input Fields Styles */
+input[type="text"],
+input[type="number"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    width: 100%; /* Make inputs take full width */
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+    border-color: #22c55e; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 5px rgba(34, 197, 94, 0.5); /* Add subtle shadow */
+}
+
+/* Item Form Styles */
 #itemForm {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    max-width: 1000px; 
+    max-width: 1000px;
     width: 100%;
 }
-#itemList{
+
+#itemList {
     list-style-type: none;
     padding: 0;
     margin: 0 0 20px 0;
@@ -68,7 +92,7 @@ nav {
 }
 
 #itemList li {
-    flex: 1 1 30%; 
+    flex: 1 1 30%;
     margin: 10px;
     padding: 12px;
     background-color: #f1f3f5;
@@ -77,6 +101,7 @@ nav {
     text-align: center;
 }
 
+/* Button Styles */
 button {
     width: 100%;
     padding: 12px;
@@ -86,20 +111,22 @@ button {
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    transition: background-color 0.3s;
 }
 
 button:hover {
     background-color: #218838;
 }
 
-/* Price List */
+/* Price List Styles */
 #priceList {
     margin-top: 20px;
     text-align: center;
     color: #212529;
     font-weight: bold;
 }
-/* Modal Background */
+
+/* Modal Styles */
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
@@ -114,7 +141,6 @@ button:hover {
     animation: fadeIn 0.3s ease; /* Smooth fade-in effect */
 }
 
-/* Modal Content */
 .modal-content {
     background-color: #ffffff; /* White background */
     padding: 20px 30px; /* Padding around the content */
@@ -127,7 +153,6 @@ button:hover {
     transform: translateY(50px); /* For slide effect */
 }
 
-/* Heading Style */
 .modal-content h2 {
     font-size: 24px;
     color: #333;
@@ -136,7 +161,6 @@ button:hover {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Text inside the modal */
 .modal-content p {
     font-size: 16px;
     color: #555;
@@ -145,7 +169,6 @@ button:hover {
     font-family: 'Arial', sans-serif;
 }
 
-/* Close Button */
 .close {
     position: absolute;
     top: 15px;
@@ -161,64 +184,7 @@ button:hover {
     color: #e74c3c; /* Red hover effect */
 }
 
-/* Button to trigger the modal */
-#openModalBtn {
-    padding: 12px 20px;
-    background-color: #22c55e;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    transition: background-color 0.3s ease;
-}
-
-#openModalBtn:hover {
-    background-color: #16a34a; /* Darker green on hover */
-}
-
-/* Price List Styles */
-#priceList {
-    text-align: center;
-    color: #212529;
-    font-weight: bold;
-}
-
-/* Animation Keyframes */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateY(100px);
-    }
-    to {
-        transform: translateY(0);
-    }
-}
-
-
-
-/* Media Queries for responsiveness */
-@media (max-width: 1200px) {
-    #itemList li {
-        flex: 1 1 30%; /* Reduce to 3 items per row on smaller screens */
-    }
-}
-
-@media (max-width: 600px) {
-    #itemList li {
-        flex: 1 1 100%; /* Stack items in one column on small screens */
-    }
-}
-/* Totals list styling to display items side by side */
+/* Totals List Styles */
 #totalsList {
     list-style-type: none;
     padding: 0;
@@ -258,6 +224,98 @@ button:hover {
     font-size: 20px;
 }
 
+/* Manual Location Section */
+.manual-location {
+    max-width: 600px;
+    margin: 10px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #f9f9f9;
+}
+
+.manual-location h2 {
+    margin-top: 0;
+    color: #2c3e50;
+    text-align: center;
+}
+
+#locationForm {
+    display: flex;
+    flex-direction: column;
+}
+
+#locationForm label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* Input Fields Styles */
+input[type="text"],
+input[type="number"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    width: 100%; /* Make inputs take full width */
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+    border-color: #22c55e; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 5px rgba(34, 197, 94, 0.5); /* Add subtle shadow */
+}
+
+#locationForm button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#locationForm button:hover {
+    background-color: #2980b9;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    #itemList li {
+        flex: 1 1 30%; /* Reduce to 3 items per row on smaller screens */
+    }
+}
+
+@media (max-width: 600px) {
+    #itemList li {
+        flex: 1 1 100%; /* Stack items in one column on small screens */
+    }
+}
+
+/* Animation Keyframes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(100px);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
 /* Container for both forms */
 .form-container {
     display: flex;
@@ -287,118 +345,9 @@ button:hover {
     border-bottom: 2px solid #e0e0e0;
     padding-bottom: 10px;
 }
-/* General Styles */
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    margin: 0;
-    padding: 0;
-}
 
-h1 {
-    color: #2c3e50;
-}
 
-/* Manual Location Section */
-.manual-location {
-    max-width: 600px;
-    margin: 10px auto;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background: #f9f9f9;
-}
 
-.manual-location h2 {
-    margin-top: 0;
-    color: #2c3e50;
-    text-align: center;
-}
-
-#locationForm {
-    display: flex;
-    flex-direction: column;
-}
-
-#locationForm label {
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-#locationForm input[type="number"] {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    font-size: 16px;
-}
-
-#locationForm button {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-#locationForm button:hover {
-    background-color: #2980b9;
-}
-
-/* Container to hold the forms and travel costs side by side */
-.container {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    gap: 20px; /* Space between the forms */
-}
-
-/* Style for the manual location form */
-.manual-location {
-    flex: 1;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-}
-
-.manual-location h2 {
-    margin-top: 0;
-}
-
-.manual-location form {
-    display: flex;
-    flex-direction: column;
-}
-
-.manual-location label {
-    margin-top: 10px;
-}
-
-.manual-location input {
-    margin-bottom: 10px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.manual-location button {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.manual-location button:hover {
-    background-color: #0056b3;
-}
 
 
 
