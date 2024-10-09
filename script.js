@@ -3,8 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalsList = document.getElementById('totalsList');
     const travelCostsElem = document.getElementById('travelCosts');
     const calculateButton = document.getElementById('calculateButton');
-    
-
 
     if (!itemList || !totalsList || !travelCostsElem || !calculateButton) {
         console.error('Required elements not found');
@@ -20,22 +18,28 @@ document.addEventListener('DOMContentLoaded', function() {
             const sheet = workbook.Sheets[sheetName];
             const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-            const headers = data[0];
-            const itemData = data.slice(1);
-            const stores = headers.slice(1); // Store names
+            const headers = data[0]; // First row for headers (e.g. "Item", "HEB Price", etc.)
+            const itemData = data.slice(1); // Data excluding headers
+            const stores = headers.slice(1); // Store names (e.g. "HEB Price", "Walmart Price", etc.)
 
             itemData.forEach((row, index) => {
-                const itemName = row[0];
-                const prices = row.slice(1).map(price => parseFloat(price) || 0); // Ensure prices are numbers
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <span>${itemName}</span>
-                    <button type="button" onclick="changeQuantity(${index}, -1)">-</button>
-                    <span id="quantity-${index}">0</span>
-                    <button type="button" onclick="changeQuantity(${index}, 1)">+</button>
-                    <input type="hidden" id="prices-${index}" value='${JSON.stringify(prices)}'>
-                `;
-                itemList.appendChild(li);
+                const itemName = row[0]; // Item name is in the first column
+                const prices = row.slice(1).map(price => parseFloat(price) || 0); // Prices for each store
+                
+                // Check if the itemName is defined
+                if (itemName) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${itemName}</span>
+                        <button type="button" onclick="changeQuantity(${index}, -1)">-</button>
+                        <span id="quantity-${index}">0</span>
+                        <button type="button" onclick="changeQuantity(${index}, 1)">+</button>
+                        <input type="hidden" id="prices-${index}" value='${JSON.stringify(prices)}'>
+                    `;
+                    itemList.appendChild(li);
+                } else {
+                    console.error('Undefined item at index:', index);
+                }
             });
 
             updateTotal(); // Initialize totals on load
@@ -81,6 +85,7 @@ function updateTravelCosts(userLat, userLon) {
     const fuelCostPerMile = parseFloat(document.getElementById('fuelCostPerMile').value); // Get from input
     const mileagePerGallon = parseFloat(document.getElementById('mileagePerGallon').value); // Get from input
     const deliveryCostPerMile = 0.5;
+
     if (isNaN(userLat) || isNaN(userLon) || isNaN(fuelCostPerMile) || isNaN(mileagePerGallon)) {
         alert('Please enter valid values for latitude, longitude, fuel cost, and mileage.');
         return;
@@ -111,6 +116,7 @@ function updateTravelCosts(userLat, userLon) {
             <h3>${store}</h3>
             <p>Distance: ${distance.toFixed(2)} miles</p>
             <p>Travel Cost: $${cost.toFixed(2)}</p>
+            <p>Delivery Cost: $${deliveryCost.toFixed(2)}</p>
         `;
         travelCostsDiv.appendChild(costElem);
     });
@@ -190,9 +196,4 @@ function updateTotal() {
     cheapestOption.innerHTML = `Cheapest Option: ${cheapestStore} at $${cheapestPrice.toFixed(2)}`;
     totalsList.appendChild(cheapestOption);
 }
-// Add this code to your existing JavaScript file
-
-document.getElementById('downloadButton').addEventListener('click', function() {
-    downloadShoppingList();
-});
 
